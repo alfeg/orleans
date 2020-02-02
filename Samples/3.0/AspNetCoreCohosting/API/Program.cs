@@ -7,6 +7,7 @@ using Orleans;
 using Orleans.Hosting;
 using Orleans.Configuration;
 using System.Threading.Tasks;
+using Autofac.Extensions.DependencyInjection;
 
 namespace AspNetCoreCohosting
 {
@@ -14,6 +15,7 @@ namespace AspNetCoreCohosting
     {
         public static Task Main(string[] args) => 
             Host.CreateDefaultBuilder(args)
+                .UseServiceProviderFactory(new AutofacServiceProviderFactory())
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.Configure((ctx, app) =>
@@ -47,6 +49,7 @@ namespace AspNetCoreCohosting
                     })
                     .Configure<EndpointOptions>(opts =>
                     {
+                        opts.GatewayPort = 0;
                         opts.AdvertisedIPAddress = IPAddress.Loopback;
                     });
                 })
